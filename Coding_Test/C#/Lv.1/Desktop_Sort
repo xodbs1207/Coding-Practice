@@ -22,7 +22,6 @@ public class Solution {
         }
         answer = new int[]{lu_min, rd_min,lu_max,rd_max+1};
 
-        
         return answer;
     }
 }
