@@ -1,0 +1,44 @@
+using System;
+
+public class Solution {
+    public int[] solution(string[] keymap, string[] targets) {
+        int[] answer = new int[targets.Length];
+        
+        for(int i=0; i<targets.Length; i++)
+        {
+            for(int j=0; j<targets[i].Length; j++)
+            {
+                int temp = -1;
+                foreach(var item in keymap)
+                {
+                    int idx = item.IndexOf(targets[i].Substring(j,1));
+                    
+                    if(idx > -1)
+                    {
+                        if(temp==-1)
+                        {
+                            temp = idx;
+                        }
+                        else if(temp>idx)
+                        {
+                            temp = idx;
+                        }
+                    }
+                }
+                if(temp==-1)
+                {
+                    answer[i] = -1;
+                    break;
+                }
+                answer[i]+=temp+1;
+
+            }
+            if(answer[i] == 0)
+            {
+                answer[i] = -1;
+            }
+        }
+        
+        return answer;
+    }
+}
