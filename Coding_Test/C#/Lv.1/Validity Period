@@ -1,0 +1,93 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+public class Solution {
+    public int[] solution(string today, string[] terms, string[] privacies) {
+        int[] answer = new int[] {};
+        List<int> answer_temp = new List<int>();
+        
+        //약관 종류와 기간 담아져있음
+        string[] terms_temp = new string[] {};
+        
+        //정보 기간과 약관 담아져있음
+        string[] privacies_temp = new string[] {};
+        
+        string[] today_tem = today.Split(".");
+        int[] today_temp = Array.ConvertAll(today_tem, s => Convert.ToInt32(s));
+        
+        //약관을 합산한 최종 기간
+        List<string> privacies_final = new List<string>();
+        
+        for(int i=0; i<terms.Length; i++)
+        {
+         terms_temp = terms_temp.Concat(terms[i].Split(' ')).ToArray();
+        }
+        
+        for(int i=0; i<privacies.Length; i++)
+        {
+         privacies_temp = privacies_temp.Concat(privacies[i].Split(' ')).ToArray();
+        }
+        
+        
+        today_temp[2]++;
+        if(today_temp[2] == 29)
+        {
+            today_temp[2] = 1;
+            today_temp[1]++;
+            if(today_temp[1] == 13)
+            {
+                today_temp[1] = 1;
+                today_temp[0]++;
+            }
+        }
+        
+        for(int i=0; i<privacies.Length; i++)
+        {
+            string plus_month = terms_temp[Array.IndexOf(terms_temp,privacies_temp[1+i*2])+1];
+            
+            string[] pri_date_temp = privacies_temp[i*2].Split(".");
+            int[] pri_date = Array.ConvertAll(pri_date_temp, s => Convert.ToInt32(s));
+            
+            pri_date[1] = pri_date[1]+Convert.ToInt32(plus_month);
+            if(pri_date[1] > 12)
+            {
+                pri_date[0] = pri_date[0] + pri_date[1]/12;
+                pri_date[1] = pri_date[1]%12;
+                if(pri_date[1] == 0)
+                {
+                    pri_date[0]--;
+                    pri_date[1] = 12;
+                }
+            }
+            
+            if(today_temp[0] > pri_date[0])
+            {
+                answer_temp.Add(i+1);
+                continue;
+            }
+            else if(today_temp[0] < pri_date[0])
+            {
+                continue;
+            }
+            else if(today_temp[1] > pri_date[1])
+            {
+                answer_temp.Add(i+1);
+                continue;
+            }
+            else if(today_temp[1] < pri_date[1])
+            {
+                continue;
+            }
+            else if(today_temp[2] > pri_date[2])
+            {
+                answer_temp.Add(i+1);
+                continue;
+            }
+            
+        }
+        
+        answer = answer_temp.ToArray();
+        return answer;
+    }
+}
