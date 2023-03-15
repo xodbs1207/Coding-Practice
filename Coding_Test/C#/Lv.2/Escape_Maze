@@ -1,0 +1,161 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class Solution {
+    public int solution(string[] maps) {
+    int answer = 0;
+        
+    //시작점 알아내기 위한 변수
+    int sx = 0;
+    int sy = 0;
+    
+    //시작점 찾기
+    for (int i = 0; i < maps.Length; i++)
+    {
+        if (maps[i].IndexOf("S") != -1)
+        {
+            //인덱스는 x의 위치
+            sx = maps[i].IndexOf("S");
+            //i는 행이므로 y의 위치
+            sy = i;
+            break;
+        }
+    }
+        
+    //레버를 찾기 위한 첫 BFS, 시작점은 바로 위에서 찾은 (sy,sx), 찾는것은 레버인 L
+    var Lever = BFS((sy, sx), "L", maps);
+        
+    //Lever의 형식은 튜플, ((레버위치y, 레버위치x),거리)의 형식으로 되어있음
+    //즉, Lever.Item2는 거리를 뜻함, 거리가 0일 경우는 탐색에 실패했음을 뜻함
+    if(Lever.Item2 == 0)
+    {
+        // 탐색에 실패했으면 막혀있다는 뜻이므로 -1을 반환하고 테스트 종료
+        return -1;
+    }
+    else
+    {
+        // 아닌거면 탐색에 성공했다는 뜻이므로, 거리를 answer에 더함
+        answer+=Lever.Item2;
+    }
+        
+    //도착지를 찾기 위한 두 번째 BFS, 시작점은 레버의 위치가 담겨있는 Lever.Item1, 찾는것은 출구인 E
+    var goal = BFS(Lever.Item1, "E", maps);
+        
+    //위와 같음, 거리가 0일 경우 탐색 실패
+    if(goal.Item2 == 0)
+    {
+        return -1;
+    }
+    else
+    {
+        // 아닌거면 탐색에 성공했다는 뜻이므로, 거리를 answer에 더함
+        answer+=goal.Item2;
+    }
+    
+    // 성공적으로 둘 모두 더했다면, 정답을 반환함 <<<<< 종착지
+    return answer;
+    }
+
+//public int solution 바깥에 있음, 4방향 계산할 때 참고하려고 readonly로 만들어둠, 굳이 이럴 필요 없이 BFS에서 해도 됨
+readonly List<(int,int)> directions = new List<(int,int)> {
+    (1,0),
+    (-1,0),
+    (0,1),
+    (0,-1),
+};
+    
+    
+ //BFS 함수, 반환 형식은 ((목표y, 목표x),거리)임, 시작지점을 뜻하는 start, 목표 문자 L, E 등이 들어갈 end,
+ //맵 나갔는지 확인하기 위한 maps를 받음
+((int,int),int) BFS((int,int) start, string end, string[] maps)
+{
+    //BFS를 위한 큐, 좌표 자체를 담기 위해 (int,int) 형식으로 함
+    var q = new Queue<(int, int)>();
+    
+    //방문 체크를 위한 리스트, 좌표 자체를 담기 위해 (int,int) 형식으로 함
+    var visited = new List<(int, int)>();
+    
+    //각 위치가 시작지점에서 어느정도의 거리가 떨어져있는지 저장하기 위한 배열
+    var Leng = new int[100,100];
+
+    //시작 지점은 당연히 거리가 0
+    Leng[start.Item1,start.Item2] = 0;
+
+    //시작점 큐에 넣음
+    q.Enqueue(start);
+
+    //시작점 방문
+    visited.Add(start);
+    
+    
+    //현재 위치를 담기 위한 (int,int)식의 변수, 아이템에 이름을 굳이 붙인 이유는 왠지 모르겠는데 안 붙이면 오류남..
+    (int a1, int a2) now = start;
+
+    //큐가 없어질때까지 무한 반복 할 거임, 안쪽에서 계속 큐에 추가가 될 것이며,
+    //목표 지점을 찾으면 return으로 바로 나올 것이기 때문에,
+    //정상적으로 큐가 없어지려면 답이 없이 막혀있어야만 함
+    do
+    {
+        //큐에서 하나를 뺌, now에 현재 위치라고 저장해둠
+        //첫 번째라면 시작 지점일 것임
+        now = q.Dequeue();
+
+        //네 개의 방향을 전부 확인하기 위한 foreach, 위쪽의 readonly를 참조해 가져오는 것임
+        foreach (var dir in directions)
+        {
+            //now의 위치(현재위치) 에서 가져온 방향으로 움직임
+            //만약 현재 위치가 (3,2)고, 왼쪽으로 갔다면 왼쪽은 (0,-1) 일테니, (3,1)이 될 것
+            int nowx = now.Item2 + dir.Item2;
+            int nowy = now.Item1 + dir.Item1;
+            
+            //맵 밖으로 나갔으면 바로 취소하고 다음 방향으로 넘겨버림
+            if (nowy == -1 || nowy == maps.Length || nowx == -1 || nowx == maps[0].Length)
+            {
+                continue;
+            }
+            
+            //이미 한 번이라도 방문했으면 바로 취소하고 다음 방향으로 넘겨버림
+            if(visited.Exists(x => x.Equals((nowy, nowx))))
+            {
+                continue;
+            }
+            
+            //현재 간 방향의 문자를 저장함, S,E,L,O,X 중 하나일 것임
+            string nowst = maps[nowy].Substring(nowx, 1);
+
+            //저장한 문자가 X가 아닐때 => 막혀있지 않을 때 실행
+            //이 IF에 들어왔다는 것은, 맵 밖으로 나가지도 않고, 방문하지도 않았었고, X로 막히지도 않았다는 뜻이다
+            //즉, 새로운 길이란 뜻임
+            if (nowst != "X")
+            {
+                //새로운 길이니 탐색을 위해 큐에 저장함
+                q.Enqueue((nowy, nowx));
+                
+                //방문 했으니 이 방향도 방문 기록에 넣음
+                visited.Add((nowy, nowx));
+                
+                //4방향을 가기 전 위치의 거리에서 1만큼 더함
+                //now는 이전 위치, nowx,y는 now에서 4방향을 움직인 위치이기 때문임
+                Leng[nowy, nowx] = Leng[now.Item1,now.Item2]+1;
+            
+                //하는 와중에 만약 도착지점일때 (end는 함수를 호출할때 정해줌, 첫 번째 호출일땐 L일 것이고, 두 번째일땐 E)
+                if(nowst == end)
+                {
+                    //맞는 방향으로 움직인 현재 위치와, 현재 위치의 거리를 전달해 줌
+                    return ((nowy, nowx),Leng[nowy,nowx]);
+                }
+
+            }
+
+        }
+
+    }
+    //위쪽의 do는 위에서 나와있다시피 큐가 끝날때까지 돌아갈 것임
+    while (q.Count != 0);
+    
+    //여기로 나왔다는 뜻은, 길이 막혀있다는 뜻임, 목표를 찾았다면 바로 위쪽의 return으로 나갔을 것이니까
+    //위치는 대충 아무거나 써서 반환해준거임, 어차피 거리를 0으로 반환해서 답을 -1로 거를 것이므로
+    return ((1, 1),0);
+}
+}
