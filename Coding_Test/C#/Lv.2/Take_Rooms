@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Solution {
+    public int solution(string[,] book_time) {
+        int answer = 0;
+        
+        List<List<int>> bk_time = new List<List<int>>();
+        
+        for(int i=0; i<book_time.Length/2; i++)
+        {
+            int enter = Convert.ToInt32(book_time[i,0].Substring(0,2))*60 + 
+                                        Convert.ToInt32(book_time[i,0].Substring(3,2));
+            int leave = Convert.ToInt32(book_time[i,1].Substring(0,2))*60 + 
+                                        Convert.ToInt32(book_time[i,1].Substring(3,2));
+            
+            bk_time.Add(new List<int>{enter,leave});  
+        }
+        
+        var bk_order = bk_time.OrderBy(x => x[0]);
+        List<int> room = new List<int>();
+        
+        foreach(var item in bk_order)
+        {
+            bool check = false;
+            for(int i = 0; i<room.Count; i++)
+            {
+
+                if(item[0] >= room[i] + 10)
+                {
+                    room.RemoveAt(i);
+                    room.Add(item[1]);
+                    check = true;
+                    break;
+                }
+            }
+            if(!check)
+            {
+                room.Add(item[1]);
+            }
+            
+        }
+
+        answer = room.Count;
+        
+        return answer;
+    }
+}
