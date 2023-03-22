@@ -1,0 +1,119 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+public class Solution {
+    public int[] solution(string[] maps) {
+        
+        int[] answer = new int[] {};
+        var visited = new bool[100,100];
+        int ca = 0;
+        var start = FindStart(maps,visited);
+        
+        do
+        {
+            (visited,ca) = DFS(start,maps,visited);
+            answer = answer.Concat(new int[1]{ca}).ToArray();
+            start = FindStart(maps,visited);
+        }
+        while(!start.Equals((-1,-1)));
+        
+
+        Array.Sort(answer);
+        
+        return answer;
+    }
+
+    
+    //시작점 찾기 함수
+    public (int,int) FindStart(string[] maps, bool[,] visit)
+    {
+        for(int i=0; i<maps.Length; i++)
+        {
+            int j = -1;
+            
+            for(int k=0; k<maps[i].Length; k++)
+            {
+                if(int.TryParse(maps[i].Substring(k,1),out j))
+                {
+                    if(visit[i,k])
+                    {
+                        continue;
+                    }
+                    return (i,k);
+                }
+            }
+        }
+        return (-1,-1);
+    }
+    
+    readonly List<(int,int)> directions = new List<(int,int)> {
+        (1,0),
+        (-1,0),
+        (0,1),
+        (0,-1),
+    };
+    
+    public (bool[,],int) DFS((int,int) start, string[] maps, bool[,] visit)
+    {
+        var st = new Stack<(int, int)>();
+        st.Push(start);
+        int Ct = 0;
+        
+        if(start.Item1 != -1 && start.Item2 != -1)
+        {
+        visit[start.Item1,start.Item2] = true;
+
+           Ct+=Convert.ToInt32(maps[start.Item1].Substring(start.Item2,1));
+        }
+        else
+        {
+           return (visit,-1);
+        }
+        
+
+        
+        do
+        {
+            
+            var now = st.Pop();
+            
+            foreach(var dir in directions)
+            {
+                int nowx = now.Item2 + dir.Item2;
+                int nowy = now.Item1 + dir.Item1;
+
+                if (nowy == -1 || nowy == maps.Length || nowx == -1 || nowx == maps[0].Length)
+                {
+                    continue;
+                }
+
+                if(visit[nowy,nowx])
+                {
+                    continue;
+                }
+                string nowst = maps[nowy].Substring(nowx, 1);
+
+                if (nowst != "X")
+                {
+                    Ct+=Convert.ToInt32(maps[nowy].Substring(nowx,1));
+                    st.Push((nowy, nowx));
+                    visit[nowy,nowx] = true;
+
+                }
+
+            }
+            
+
+        }
+        while(st.Count != 0);
+        
+        if(Ct == 0)
+        {
+            return (visit,-1);
+        }
+        
+        return (visit,Ct);
+    }
+    
+}
