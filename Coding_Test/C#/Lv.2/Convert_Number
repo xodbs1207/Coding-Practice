@@ -1,0 +1,60 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class Solution {
+    public int solution(int x, int y, int n) {
+        int answer = 0;
+        
+        if(x == y)
+        {
+            return 0;
+        }
+        
+        answer = BFS(x,y,n);
+        
+        return answer;
+    }
+    
+    public int BFS(int number, int finish, int plus)
+    {
+         var Qu = new Queue<(int, int)>();
+        bool[] visited = new bool[1000000];
+        
+        Qu.Enqueue((number,0));
+
+        
+        do
+        {
+            var now = Qu.Dequeue();
+            
+            if(now.Item1 + plus == finish || now.Item1*2 == finish || now.Item1*3 == finish)
+            {
+                return now.Item2+1;
+            }
+
+            
+            if(now.Item1+plus < finish && !visited[now.Item1+plus])
+            {
+                visited[now.Item1+plus] = true;
+                Qu.Enqueue((now.Item1+plus,now.Item2+1));
+            }
+            if(now.Item1*2 < finish  && !visited[now.Item1*2])
+            {
+                visited[now.Item1*2] = true;
+                Qu.Enqueue((now.Item1*2,now.Item2+1));
+            }
+            if(now.Item1*3 < finish  && !visited[now.Item1*3])
+            {
+                visited[now.Item1*3] = true;
+                Qu.Enqueue((now.Item1*3,now.Item2+1));
+            }
+            
+        }
+        while(Qu.Count != 0); 
+        
+        return -1;
+    }
+    
+    
+}
