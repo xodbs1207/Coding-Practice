@@ -1,0 +1,371 @@
+정렬 알고리즘
+
+------------------------------------------------------------------------------------------------------------------
+
+선택 정렬
+
+선택정렬은 정렬되지 않은 데이터들에 대해 가장 작은 데이터를 찾아 가장 앞의 데이터와 교환해 나가는 방식이다.
+
+1. 리스트에서 최소값을 찾는다.
+
+2. 최소값을 맨 앞의 값과 교체한다. (Swap)
+
+3. 교체한 맨 앞의 데이터는 정렬된 것으로 간주하고 다음 인덱스부터 1, 2 행위를 끝까지 반복한다.
+
+------------------------------------------------------------------------------------------------------------------
+
+버블 정렬
+
+버블 정렬은 서로 이웃한 데이터들을 비교하며 가장 큰 데이터를 가장 뒤로 보내는 정렬방식이다.
+
+1. 첫번째 데이터와 두번째 데이터를 비교하여 첫번째 값이 더 크면 두번째 데이터와 교환한다.
+
+2. 두번째 데이터와 세번째 데이터를 비교하여 더 큰 수를 뒤로 보낸다. 
+
+3. 이렇게 끝까지 진행하면, 제일 큰 숫자가 맨 뒤로 가게 된다. 이렇게 계속 처음부터 n-1번째 데이터를 비교해서 정렬하
+   는 알고리즘이다.
+   
+------------------------------------------------------------------------------------------------------------------
+   
+삽입 정렬
+
+삽입정렬(Insertion sort)은 앞의 숫자가 나보다 큰지 비교하면서 자신의 위치에 삽입하는 정렬 방법이다.
+
+앞의 값과 비교를 하기 때문에 전체 배열 중 0번 인덱스가 아닌 1번 인덱스부터 앞의 값과 비교한다.
+
+------------------------------------------------------------------------------------------------------------------
+
+퀵 정렬
+
+퀵정렬은 피봇을 기준으로 작거나 같은 값을 지닌 데이터는 앞으로, 큰 값을 지닌 데이터는 뒤로 가도록 하여 작은 값을 갖는 데이터와 큰 값을 갖는 데이터로 분리해가며 정렬하는 방법이다.
+ 
+1. 분할 정복 알고리즘
+
+2. 일반적으로 빠른 알고리즘
+
+------------------------------------------------------------------------------------------------------------------
+
+힙 정렬
+
+힙은 완전 이진 트리 구조를 가진 자료구조이다.
+
+이 힙의 특성을 이용하여 정렬하는 것이 힙정렬(Heap sort)이다.
+
+- 최소값 혹은 최대값을 빠르게 가져오기 위해 고안됨.
+
+- 형제노드 사이에서는 아무런 대소 관계가 정해져 있지 않음.
+
+------------------------------------------------------------------------------------------------------------------
+
+선택 정렬
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SelectionSort
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("선택정렬");
+
+            int[] data = { 20, 15, 1, 5, 10 };
+
+            Console.Write("시작값 - ");
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                Console.Write(data[i] + ", ");
+            }
+            Console.WriteLine();
+            
+            //정렬  
+            for(int i = 0; i < data.Length; i++)
+            {
+                int min = i;
+
+                for(int j = i + 1; j < data.Length; j++)
+                {
+                    //최소값 비교
+                    if (data[min] > data[j])
+                        min = j;
+                }
+                Swap(ref data[i], ref data[min]);
+                                
+                for (int k = 0; k < data.Length; k++)
+                {
+                    Console.Write(data[k] + ", ");
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.Write("정렬값 - ");
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                Console.Write(data[i] + ", ");
+            }
+            Console.WriteLine();
+        }
+
+        static void Swap(ref int a, ref int b)
+        {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+버블 정렬
+   
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SelectionSort
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("선택정렬");
+
+            int[] data = { 20, 15, 1, 5, 10 };
+
+            Console.Write("시작값 - ");
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                Console.Write(data[i] + ", ");
+            }
+            Console.WriteLine();
+            
+            //정렬  
+            for(int i = 0; i < data.Length; i++)
+            {
+                int min = i;
+
+                for(int j = i + 1; j < data.Length; j++)
+                {
+                    //최소값 비교
+                    if (data[min] > data[j])
+                        min = j;
+                }
+                Swap(ref data[i], ref data[min]);
+                                
+                for (int k = 0; k < data.Length; k++)
+                {
+                    Console.Write(data[k] + ", ");
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.Write("정렬값 - ");
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                Console.Write(data[i] + ", ");
+            }
+            Console.WriteLine();
+        }
+
+        static void Swap(ref int a, ref int b)
+        {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+삽입 정렬
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Insertion_sort
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("삽입정렬");
+
+            int[] nArrData = { 20, 15, 1, 5, 10 }; 
+
+            for(int i = 1; i < nArrData.Length; i++)
+            {
+                int key = i;
+                for(int j = i - 1; j >= 0; j--)
+                {
+                    if(nArrData[key] < nArrData[j])
+                    {
+                        int nTemp = nArrData[j];
+                        nArrData[j] = nArrData[key];
+                        nArrData[key] = nTemp;
+                        key = j;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                for(int j = 0; j < nArrData.Length; j++)
+                {
+                    Console.Write(nArrData[j] + ", ");
+                }
+
+                Console.WriteLine();
+            }
+        }
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+퀵 정렬
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace quicksort
+{
+    class Program
+    {
+
+        static int[] data = { 25, 15, 60, 45, 10, 20, 5, 30 };
+        static void Main(string[] args)
+        {
+            Console.WriteLine("퀵정렬");
+
+            Console.Write("시작값 : ");
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                Console.Write(data[i].ToString() + ", ");
+            }
+
+            Console.WriteLine();
+
+            SortQuick(0, data.Length - 1);
+
+            Console.Write("정렬값 : ");
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                Console.Write(data[i].ToString() + ", ");
+            }
+
+            Console.WriteLine();
+        }
+        static void SortQuick(int nFirst, int nLast)
+        {
+            if(nFirst < nLast)
+            {
+                int pivotIndex = FuncPartition(nFirst, nLast);
+
+                //분할 정복
+                SortQuick(nFirst, pivotIndex - 1);
+                SortQuick(pivotIndex + 1, nLast);
+            }
+        }
+
+        static int FuncPartition(int nFirst, int nLast)
+        {
+            int nLow, nHigh, nPivot;
+
+            //양의 값 여기에서는 마지막 값
+            nPivot = data[nLast];
+
+            nLow = nFirst;
+            nHigh = nLast - 1;
+
+            while(nLow <= nHigh)
+            {
+                while (data[nLow] < nPivot)
+                    nLow++;
+
+                while (data[nHigh] > nPivot)
+                    nHigh--;
+
+                if(nLow <= nHigh)
+                {
+                    Swap(data, nLow, nHigh);
+                }
+            }
+
+            Swap(data, nLow, nLast);
+
+            return nLow;
+        }
+
+        static void Swap(int[] nArrData, int nValue1, int nValue2)
+        {
+            int nTemp = nArrData[nValue1];
+            nArrData[nValue1] = nArrData[nValue2];
+            nArrData[nValue2] = nTemp;
+        }
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+힙 정렬
+
+public void SortHeap()
+        {
+            int[] nArrData = { 20, 35, 15, 5, 40, 10, 25, 30 };
+
+            for (int i = (nArrData.Length - 1)/2; i >= 0; --i)
+            {
+                CalcHeap(nArrData, i, nArrData.Length);
+            }
+            for(int i = nArrData.Length - 1; i>0; --i)
+            {
+                SwapHeap(ref nArrData[i], ref nArrData[0]);
+                CalcHeap(nArrData, 0, i);
+            }
+        }
+        void CalcHeap(int[] nArrData, int nRoot, int nMax)
+        {
+            while(nRoot < nMax)
+            {
+                int nChild = nRoot * 2 + 1;
+                if (nChild + 1 < nMax && nArrData[nChild] < nArrData[nChild + 1])
+                    ++nChild; //오른쪽 노드
+
+                if (nChild < nMax && nArrData[nRoot] < nArrData[nChild])
+                {
+                    SwapHeap(ref nArrData[nRoot], ref nArrData[nChild]);
+                    nRoot = nChild;
+                }
+                else
+                    break;
+            }
+        }
+        void SwapHeap(ref int nData1, ref int nData2)
+        {
+            int nTemp = nData1;
+            nData1 = nData2;
+            nData2 = nTemp;
+        }
